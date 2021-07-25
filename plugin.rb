@@ -38,10 +38,18 @@ require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
 
 after_initialize do
   [
-    '../app/controllers/discourse_automation/admin_discourse_automation_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_automations_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_scriptables_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_triggerables_controller',
+    '../app/lib/discourse_automation/triggers/recurring',
+    '../app/lib/discourse_automation/triggers/stalled_wiki',
+    '../app/lib/discourse_automation/triggers/user_added_to_group',
+    '../app/lib/discourse_automation/triggers/point_in_time',
+    '../app/lib/discourse_automation/triggers/post_created_edited',
+    '../app/lib/discourse_automation/triggers/topic',
+    '../app/lib/discourse_automation/triggers/api_call',
+    '../app/controllers/discourse_automation/automations_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_automations_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_scriptables_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_triggerables_controller',
     '../app/serializers/discourse_automation/automation_serializer',
     '../app/serializers/discourse_automation/automation_field_serializer',
     '../app/serializers/discourse_automation/trigger_serializer',
@@ -51,12 +59,6 @@ after_initialize do
     '../app/models/discourse_automation/field',
     '../app/jobs/scheduled/discourse_automation_tracker',
     '../app/jobs/scheduled/stalled_wiki_tracker',
-    '../app/lib/discourse_automation/triggers/recurring',
-    '../app/lib/discourse_automation/triggers/stalled_wiki',
-    '../app/lib/discourse_automation/triggers/user_added_to_group',
-    '../app/lib/discourse_automation/triggers/point_in_time',
-    '../app/lib/discourse_automation/triggers/post_created_edited',
-    '../app/lib/discourse_automation/triggers/topic',
     '../app/lib/discourse_automation/scripts/pin_topic',
     '../app/lib/discourse_automation/scripts/gift_exchange',
     '../app/lib/discourse_automation/scripts/send_pms',
@@ -73,7 +75,19 @@ after_initialize do
 
   add_admin_route 'discourse_automation.title', 'discourse-automation'
 
+  add_user_api_key_scope(
+    :automations_trigger,
+    methods: :post,
+    actions: 'discourse_automation/automations#trigger',
+    formats: :json,
+    params: [:context]
+  )
+
   DiscourseAutomation::Engine.routes.draw do
+    scope format: :json do
+      post '/automations/:id/trigger' => 'automations#trigger', constraints: AdminConstraint.new
+    end
+
     scope '/admin/plugins/discourse-automation', as: 'admin_discourse_automation', constraints: StaffConstraint.new do
       scope format: false do
         get '/' => 'admin_discourse_automation#index'

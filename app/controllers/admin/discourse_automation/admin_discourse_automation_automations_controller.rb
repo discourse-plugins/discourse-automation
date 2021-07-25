@@ -29,6 +29,8 @@ module DiscourseAutomation
     end
 
     def update
+      params.require(:automation)
+
       automation = DiscourseAutomation::Automation.find(params[:id])
 
       enforce_trigger!(request.parameters[:automation])
@@ -66,7 +68,7 @@ module DiscourseAutomation
 
     def trigger
       automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.trigger!('kind' => 'manual')
+      automation.trigger!('kind' => DiscourseAutomation::Triggerable::ApiCall)
       render json: success_json
     end
 

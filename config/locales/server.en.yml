@@ -7,6 +7,10 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      api_call:
+        title: API call
+        description: Making a POST request to trigger an automation
+        doc: The POST request should be made to `/automations/:id/trigger.json` with a global API key or a User API key with the `discourse_automation:automations_trigger` scope.
       recurring:
         title: Recurring
       point_in_time:

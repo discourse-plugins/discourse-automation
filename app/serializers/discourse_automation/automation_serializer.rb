@@ -25,23 +25,27 @@ module DiscourseAutomation
     end
 
     def script
+      doc_key = "discourse_automation.scriptables.#{object.script}.doc"
+
       {
         id: object.script,
         version: scriptable.version,
         name: I18n.t("discourse_automation.scriptables.#{object.script}.title"),
         description: I18n.t("discourse_automation.scriptables.#{object.script}.description"),
-        doc: I18n.t("discourse_automation.scriptables.#{object.script}.doc"),
+        doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found
       }
     end
 
     def trigger
+      doc_key = "discourse_automation.triggerables.#{object.trigger}.doc"
+
       {
         id: object.trigger,
         name: I18n.t("discourse_automation.triggerables.#{object.trigger}.title"),
         description: I18n.t("discourse_automation.triggerables.#{object.trigger}.description"),
-        doc: I18n.t("discourse_automation.triggerables.#{object.trigger}.doc"),
+        doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable.not_found
       }
     end
