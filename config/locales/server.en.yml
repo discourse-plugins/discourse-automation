@@ -10,7 +10,7 @@ en:
       api_call:
         title: API call
         description: Making a POST request to trigger an automation
-        doc: The POST request should be made to `/automations/:id/trigger.json` with a global API key or a User API key with the `discourse_automation:automations_trigger` scope.
+        doc: The POST request should be made to `/automations/:id/trigger.json` with a global API key or a User API key with the `discourse-automation:automations_trigger` scope.
       recurring:
         title: Recurring
       point_in_time:

@@ -60,7 +60,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
     end
 
     describe '#destroy' do
-      it 'destroys the bookmark' do
+      it 'destroys the automation' do
         delete "/admin/plugins/discourse-automation/automations/#{automation.id}.json"
         expect(DiscourseAutomation::Automation.find_by(id: automation.id)).to eq(nil)
       end
